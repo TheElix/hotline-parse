@@ -10,6 +10,8 @@ class Query
     public function __construct(PDO $connection)
     {
         $this->connection = $connection;
+
+        self::prepareTable($this->connection);
     }
 
     public function selectAll($table)
@@ -32,6 +34,25 @@ class Query
             )");
 
             $statement->execute();
+        }
+    }
+
+    private static function prepareTable($connection)
+    {
+        try{
+
+            $statement = $connection->prepare("CREATE TABLE hotline_items.".self::$notebookTable."
+                                                (
+                                                    id INT PRIMARY KEY AUTO_INCREMENT,
+                                                    image TEXT,
+                                                    title VARCHAR(255)
+                                                )");
+
+            $statement->execute();
+
+        }
+        catch (PDOException $e){
+            echo "Table is exist";
         }
     }
 }
